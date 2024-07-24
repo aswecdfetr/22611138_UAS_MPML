@@ -8,9 +8,6 @@ df = 'afiqahuasmpml.py'
 # Judul web
 st.title('Online Food Purchase Prediction for Output')
 
-# Input form for user
-st.title('Prediksi Output untuk Online Foods')
-
 # Input features
 gender = st.selectbox('Gender', ['Male', 'Female'])
 marital_status = st.selectbox('Marital Status', ['Single', 'Married', 'Prefer not to say'])
