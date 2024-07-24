@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import joblib
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier()
+# Training model
+model.fit(X_train, y_train)
 
 # Membaca model
 df = open('afiqahuasmpml.py')
