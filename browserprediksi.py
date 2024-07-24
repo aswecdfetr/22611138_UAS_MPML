@@ -1,13 +1,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-model = RandomForestClassifier()
-# Training model
-model.fit(X_train, y_train)
 
 # Membaca model
-df = open('afiqahuasmpml.py')
+df = 'afiqahuasmpml.py'
 
 # Judul web
 st.title('Online Food Purchase Prediction for Output')
