@@ -8,14 +8,6 @@ df = 'afiqahuasmpml.py'
 # Judul web
 st.title('Online Food Purchase Prediction for Output')
 
-# Save model and preprocessor
-joblib.dump(model, 'random_forest_model.pkl')
-joblib.dump(preprocessor, 'preprocessor.pkl')
-
-# Load model and preprocessor
-model = joblib.load('random_forest_model.pkl')
-preprocessor = joblib.load('preprocessor.pkl')
-
 # Input form for user
 st.title('Prediksi Output untuk Online Foods')
 
