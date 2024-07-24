@@ -1,14 +1,25 @@
-import pickle
-import streamlit as st
-import numpy as np
-
 # Membaca model
-df = pickle.load(open('afiqahuasmpml.py','rb'))
+df = open('afiqahuasmpml.py')
 
 # Judul web
 st.title('Online Food Purchase Prediction for Output')
 
-# Input data dengan contoh angka valid untuk pengujian
+# Save model and preprocessor
+joblib.dump(model, 'random_forest_model.pkl')
+joblib.dump(preprocessor, 'preprocessor.pkl')
+
+import streamlit as st
+import pandas as pd
+import numpy as np
+
+# Load model and preprocessor
+model = joblib.load('random_forest_model.pkl')
+preprocessor = joblib.load('preprocessor.pkl')
+
+# Input form for user
+st.title('Prediksi Output untuk Online Foods')
+
+# Input features
 gender = st.selectbox('Gender', ['Male', 'Female'])
 marital_status = st.selectbox('Marital Status', ['Single', 'Married', 'Prefer not to say'])
 occupation = st.selectbox('Occupation', ['Employee', 'House wife', 'Self Employeed', 'Student'])
