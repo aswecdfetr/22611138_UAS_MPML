@@ -3,6 +3,8 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 
+df = pd.read_csv('onlinefood.csv')
+
 # Input form for user
 st.title('Online Food Purchase Prediction for Output')
 
