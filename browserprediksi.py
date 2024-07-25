@@ -3,9 +3,6 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 
-# Assuming you have a module named `afiqahuasmpml.py` where preprocessor and model are defined
-from afiqahuasmpml import preprocessor, model  # Adjust the import based on your actual module and variable names
-
 # Input form for user
 st.title('Online Food Purchase Prediction for Output')
 
