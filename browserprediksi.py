@@ -2,9 +2,11 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
+from sklearn.preprocessing import StandardScaler
+from joblib import load
 
-# Membaca model
-df = 'afiqahuasmpml.py'
+# Assuming you have a module named `afiqahuasmpml.py` where preprocessor and model are defined
+from afiqahuasmpml import preprocessor, model  # Adjust the import based on your actual module and variable names
 
 # Input form for user
 st.title('Online Food Purchase Prediction for Output')
@@ -52,4 +54,4 @@ if st.button('Predict'):
     except ValueError as e:
         st.error(f"Error during preprocessing: {e}")
     except Exception as e:
-        st.error(f"An error has eccoured: {e}")
+        st.error(f"An error has occurred: {e}")
