@@ -16,7 +16,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import math
 
 #Load dataset
-df = pd.read_csv('onlinefoods.csv')
+df = pd.read_csv('C:/Users/USER/Downloads/UAS MPML/UAS/onlinefoods.csv')
 
 data_cleaned = df.drop(columns=['Unnamed: 12'])
 data_encoded = pd.get_dummies(data_cleaned, columns=[
