@@ -1,19 +1,6 @@
 # Importing necessary libraries
 import pandas as pd
-import seaborn as sns
 import streamlit as st
-import matplotlib.pyplot as plt
-from sklearn.impute import SimpleImputer
-import joblib
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import math
 import numpy as np
 
 # Membaca model
