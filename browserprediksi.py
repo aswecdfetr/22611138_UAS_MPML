@@ -1,11 +1,25 @@
-import streamlit as st
+# Importing necessary libraries
 import pandas as pd
+import seaborn as sns
+import streamlit as st
+import matplotlib.pyplot as plt
+from sklearn.impute import SimpleImputer
+import joblib
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import math
 import numpy as np
 
 # Membaca model
 df = 'afiqahuasmpml.py'
 
-# Judul web
+# Input form for user
 st.title('Online Food Purchase Prediction for Output')
 
 # Input features
@@ -45,10 +59,10 @@ if st.button('Predict'):
         prediction_proba = model.predict_proba(user_input_processed)
         
         # Display prediction
-        st.write('### Hasil Prediksi')
-        st.write(f'Output Prediksi: {prediction[0]}')
-        st.write(f'Probabilitas Prediksi: {prediction_proba[0]}')
+        st.write('### Result Prediction')
+        st.write(f'Output Prediction: {prediction[0]}')
+        st.write(f'Probability Prediction: {prediction_proba[0]}')
     except ValueError as e:
         st.error(f"Error during preprocessing: {e}")
     except Exception as e:
-        st.error(f"Terjadi kesalahan: {e}")
+        st.error(f"An error has eccoured: {e}")
