@@ -2,8 +2,6 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from sklearn.preprocessing import StandardScaler
-from joblib import load
 
 # Assuming you have a module named `afiqahuasmpml.py` where preprocessor and model are defined
 from afiqahuasmpml import preprocessor, model  # Adjust the import based on your actual module and variable names
