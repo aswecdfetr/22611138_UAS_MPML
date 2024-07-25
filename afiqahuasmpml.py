@@ -17,14 +17,12 @@ import math
 
 #Load dataset
 df = pd.read_csv('C:/Users/USER/Downloads/UAS MPML/UAS/onlinefoods.csv')
-df
 
 data_cleaned = df.drop(columns=['Unnamed: 12'])
 data_encoded = pd.get_dummies(data_cleaned, columns=[
     'Gender', 'Marital Status', 'Occupation', 'Monthly Income',
     'Educational Qualifications', 'Feedback', 'Output'
 ])
-data_encoded
 
 #Plot distributions of age and family size
 plt.figure(figsize=(12, 5))
