@@ -4,8 +4,8 @@ import seaborn as sns
 import streamlit as st
 import matplotlib.pyplot as plt
 from sklearn.impute import SimpleImputer
-import joblib
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
@@ -70,55 +70,57 @@ preprocessor = ColumnTransformer(
         ('num', StandardScaler(), numerical_features),
         ('cat', OneHotEncoder(), categorical_features)])
 
-# Splitting the dataset into training and testing sets
+# Encode target labels
+label_encoder = LabelEncoder()
+df['Output'] = label_encoder.fit_transform(df['Output'])
+
+# Split the dataset into training and testing sets
 X = df.drop('Output', axis=1)
 y = df['Output']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Applying preprocessing
+# Preprocessing pipelines for both numerical and categorical data
+numerical_features = ['Age', 'Family size', 'latitude', 'longitude']
+numerical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler())
+])
+
+categorical_transformer = Pipeline(steps=[
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+])
+
+# Preprocessing for training and testing sets
 X_train = preprocessor.fit_transform(X_train)
 X_test = preprocessor.transform(X_test)
 
-from sklearn.model_selection import cross_val_score
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.preprocessing import LabelEncoder
-import math
-import matplotlib.pyplot as plt
+# Encode target labels
+y_train = label_encoder.fit_transform(y_train)
+y_test = label_encoder.transform(y_test)
 
-# Contoh data (ganti dengan data Anda)
-# X_train, X_test, y_train, y_test
-
-#Encode target labels with value between 0 and n_classes-1
-label_encoder = LabelEncoder()
-y_train_encoded = label_encoder.fit_transform(y_train)
-y_test_encoded = label_encoder.transform(y_test)
-
-#Initialize Logistic Regression model
+# Initialize and train Logistic Regression model
 logreg_model = LogisticRegression(max_iter=1000)
+logreg_model.fit(X_train, y_train)
 
-#Train the model
-logreg_model.fit(X_train, y_train_encoded)
-
-#Predict on test set
+# Predict on test set
 y_pred_encoded = logreg_model.predict(X_test)
 
-#Calculate evaluation metrics
-mae = mean_absolute_error(y_test_encoded, y_pred_encoded)
-mse = mean_squared_error(y_test_encoded, y_pred_encoded)
+# Calculate evaluation metrics
+mae = mean_absolute_error(y_test, y_pred_encoded)
+mse = mean_squared_error(y_test, y_pred_encoded)
 rmse = math.sqrt(mse)
-r2 = r2_score(y_test_encoded, y_pred_encoded)
+r2 = r2_score(y_test, y_pred_encoded)
 
-#Print evaluation metrics
+# Print evaluation metrics
 print('Logistic Regression Metrics =')
 print(f'Mean Absolute Error (MAE): {mae:.2f}')
 print(f'Mean Squared Error (MSE): {mse:.2f}')
 print(f'Root Mean Squared Error (RMSE): {rmse:.2f}')
 print(f'R-squared (R²): {r2:.2f}\n')
 
-#Define models
+# Define models
 models = {
-    'Logistic Regression' : logreg_model.fit(X_train, y_train_encoded),
+    'Logistic Regression': LogisticRegression(max_iter=1000),
     'Random Forest': RandomForestClassifier(),
     'KNN': KNeighborsClassifier()
 }
@@ -126,17 +128,12 @@ models = {
 # Train and evaluate models using cross-validation
 results = {}
 for name, model in models.items():
+    model.fit(X_train, y_train)
     cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='accuracy')
     results[name] = cv_scores
     print(f'{name} Cross-Validation Accuracy: {cv_scores.mean():.2f} (+/- {cv_scores.std():.2f})')
 
-#Initialize models
-models = {
-    '\n Random Forest': RandomForestClassifier(),
-    'KNN': KNeighborsClassifier()
-}
-
-#Train and evaluate models
+# Train and evaluate models
 for name, model in models.items():
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
@@ -144,61 +141,24 @@ for name, model in models.items():
     print(f'{name} Accuracy: {accuracy:.2f}')
     print(classification_report(y_test, y_pred))
 
-#Plot model performance
+# Plot model performance
 plt.figure(figsize=(10, 5))
 plt.boxplot(results.values(), labels=results.keys())
 plt.title('Model Comparison')
 plt.ylabel('Cross-Validation Accuracy')
 plt.show()
 
-#Train the best model
+# Train the best model (Random Forest)
 best_model = RandomForestClassifier()
 best_model.fit(X_train, y_train)
 y_pred = best_model.predict(X_test)
 
-#Evaluate the best model
+# Evaluate the best model
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Best Model = Random Forest \nRandom Forest Accuracy: {accuracy:.2f}')
 print(classification_report(y_test, y_pred))
 
-# Handle missing values
-imputer = SimpleImputer(strategy='mean')
-df['Age'] = imputer.fit_transform(df[['Age']])
-
-# Encode categorical variables
-categorical_features = ['Gender', 'Marital Status', 'Occupation', 'Monthly Income', 'Educational Qualifications', 'Feedback']
-numerical_features = ['Age', 'Family size', 'latitude', 'longitude']
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('num', StandardScaler(), numerical_features),
-        ('cat', OneHotEncoder(), categorical_features)])
-
-# Split the dataset
-X = df.drop('Output', axis=1)
-y = df['Output']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Apply preprocessing
-X_train = preprocessor.fit_transform(X_train)
-X_test = preprocessor.transform(X_test)
-
-# Train model
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-
-# Save model and preprocessor
-joblib.dump(model, 'random_forest_model.pkl')
-joblib.dump(preprocessor, 'preprocessor.pkl')
-
-import streamlit as st
-import pandas as pd
-import numpy as np
-
-# Load model and preprocessor
-model = joblib.load('random_forest_model.pkl')
-preprocessor = joblib.load('preprocessor.pkl')
-
+# Streamlit app
 # Input form for user
 st.title('Online Food Purchase Prediction for Output')
 
@@ -231,18 +191,21 @@ user_input = pd.DataFrame({
 # Button to make prediction
 if st.button('Predict'):
     try:
-        # Apply preprocessing
-        user_input_processed = preprocessor.transform(user_input)
-        
-        # Make prediction
-        prediction = model.predict(user_input_processed)
-        prediction_proba = model.predict_proba(user_input_processed)
-        
-        # Display prediction
-        st.write('### Result Prediction')
-        st.write(f'Output Prediction: {prediction[0]}')
-        st.write(f'Probability Prediction: {prediction_proba[0]}')
+        # Terapkan preprocessing
+        user_input_encoded = preprocessor.transform(user_input)
+
+        # Buat prediksi
+        prediction = best_model.predict(user_input_encoded)
+        prediction_proba = best_model.predict_proba(user_input_encoded)
+
+        # Translate prediction
+        prediction_label = "Order" if prediction[0] == 1 else "Tidak Jadi Order"
+
+        # Tampilkan hasil prediksi
+        st.write('### Hasil Prediksi')
+        st.write(f'Prediksi Output: {prediction_label}')
+        st.write(f'Probabilitas Prediksi: {prediction_proba[0]}')
     except ValueError as e:
-        st.error(f"Error during preprocessing: {e}")
+        st.error(f"Terjadi kesalahan selama preprocessing: {e}")
     except Exception as e:
-        st.error(f"An error has eccoured: {e}")
+        st.error(f"Terjadi kesalahan: {e}")
